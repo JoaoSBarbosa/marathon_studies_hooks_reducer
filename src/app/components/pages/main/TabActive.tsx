@@ -5,6 +5,7 @@ import {ButtonTabList} from "@/app/components/types/buttonTabList";
 import {Aperture, ApplePodcastsLogo} from "@phosphor-icons/react";
 import {ButtonTab} from "@/app/components/components/ButtonTab";
 import {ItemsData} from "@/app/components/lessons/reducers_lesson/course_class/page";
+import {ContextLesson} from "@/app/components/lessons/context_lesson/page";
 
 export const TabActive = () => {
 
@@ -44,7 +45,7 @@ export const TabActive = () => {
 
             <div className="flex-1 overflow-auto p-4 bg-gray-200">
                 {tabActive === 'context' &&
-                    <div>Exibindo conetxto</div>
+                    <ContextLesson/>
                 }
                 {tabActive === 'reducers' &&
                     <ItemsData/>
