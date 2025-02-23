@@ -1,54 +1,99 @@
-import {useContext} from "react";
-import {CountContext2} from "@/app/components/lessons/context_lesson/context/CountContext2";
+import {use, useContext, useState} from "react";
+import {UserContext} from "@/app/components/lessons/context_lesson/context/UserContext";
+import {UserGreetingMessage} from "@/app/components/lessons/context_lesson/components/UserGreetingMessage";
 
 export const UserLogged = () => {
-    const online = useContext(CountContext2);
-    const defaultButtonStyles = "py-2 px-4 rounded-md transition-all duration-200";
 
-    const handleBanAll = () => {
-        if (online) {
-            online.setOnlineCount(0);
+    const user = useContext(UserContext);
+    const [userName, setUserName] = useState("");
+
+    const handleLoggin = () => {
+        if (user && userName) {
+            user.setUserLogged(userName)
+
+            setUserName("");
+        } else {
+            return
         }
-    };
 
-    const handlePermitAll10 = () => {
-        if (online) {
-            if (online.onlineCount !== null) {
-                online.setOnlineCount(online.onlineCount + 10);
-            } else {
-                online.setOnlineCount(10);
-            }
+    }
+    const handleLoggof = () => {
+        if (user) {
+            user.setUserLogged("");
         }
-    };
-
-    // Garantir que online não seja null antes de renderizar os botões
-    if (!online) return <div>Loading...</div>; // Caso o contexto não tenha sido carregado
-
+    }
     return (
-        <div className="flex gap-4 items-center">
-            <span
-                className={`bg-green-100 text-green-800 border border-green-900 ${defaultButtonStyles}`}
-            >
-        Usuários online: {online.onlineCount ?? 0}
-      </span>
+        <section className={"bg-gray-900"}>
 
-            {/* Botão de banir todos */}
-            {online.onlineCount !== null && online.onlineCount > 0 && (
-                <button
-                    onClick={handleBanAll}
-                    className={`bg-red-200 hover:bg-red-300 text-red-800 p-2 rounded-md ${defaultButtonStyles}`}
-                >
-                    Banir todos
-                </button>
-            )}
+            <div className={"flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-96 lg:py-0"}>
 
-            <button
-                onClick={handlePermitAll10}
-                className={`bg-purple-200 hover:bg-purple-300 text-purple-800 p-2 rounded-md ${defaultButtonStyles}`}
-            >
-                Liberar +10
-            </button>
+                <div
+                    className={"w-full  rounded-lg shadow dark:border md:mt-0 sm:max-w-2xl xl:p-0 bg-gray-800 border-gray-700"}>
 
-        </div>
-    );
-};
+                    {user && user?.userLogged ?
+
+                        (
+                            <div className={"flex flex-col p-4 gap-4 w-full"}>
+
+
+                                <div className={"flex items-center justify-between"}>
+                                    <img
+                                        className="w-10 h-10 rounded-full"
+                                        src="/user.jpg"
+                                        alt=""
+                                    />
+                                    <button
+                                        onClick={handleLoggof}
+                                        type="button"
+                                        className={`
+                                            text-red-800 bg-red-100 hover:bg-red-200 focus:ring-0 
+                                            focus:outline-none focus:ring-primary-300 font-medium rounded-lg 
+                                            text-sm px-5 py-2.5 text-center`}>
+                                        Sair
+                                    </button>
+                                </div>
+                                <UserGreetingMessage userName={user?.userLogged}/>
+
+                            </div>
+                        )
+                        :
+                        (
+                            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+                                <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                                    Entre na sua conta
+                                </h1>
+                                <form className="space-y-4 md:space-y-6">
+                                    <div>
+                                        <label
+                                            htmlFor="nome"
+                                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                            Seu nome
+                                        </label>
+                                        <input
+                                            value={userName}
+                                            onChange={(e) => setUserName(e.target.value)}
+                                            type="text"
+                                            name="nome"
+                                            id="nome"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                            placeholder="Lucas de Souza" required={true}/>
+                                    </div>
+
+
+                                    <button
+                                        onClick={handleLoggin}
+                                        type="button"
+                                        className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5
+                                text-center">
+                                        Entrar
+                                    </button>
+                                </form>
+                            </div>
+                        )
+                    }
+
+                </div>
+            </div>
+        </section>
+    )
+}
